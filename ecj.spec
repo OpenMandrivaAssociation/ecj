@@ -26,7 +26,7 @@ Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
 
 BuildRequires: gcc-java >= 4.0.0
-BuildRequires: /usr/bin/aot-compile-rpm
+BuildRequires: java-1.5.0-gcj-devel
 BuildRequires: java-gcj-compat
 
 %if ! %{with_gcjbootstrap}
