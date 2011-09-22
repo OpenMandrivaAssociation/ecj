@@ -29,7 +29,9 @@ BuildRequires: gcc-java >= 4.0.0
 BuildRequires: java-1.5.0-gcj-devel
 BuildRequires: java-gcj-compat
 
-%if ! %{with_gcjbootstrap}
+%if %{with_gcjbootstrap}
+Provides:	ecj-bootstrap
+%else
 BuildRequires: ant
 %endif
 
