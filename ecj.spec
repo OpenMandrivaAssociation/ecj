@@ -6,6 +6,7 @@
 # FIXME until java stack is corrected
 %if 1
 %bcond_without	gcjbootstrap
+BuildConflicts:	java-1.5.0-gcj
 %endif
 
 Summary: Eclipse Compiler for Java
