@@ -6,7 +6,7 @@
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 3.4.2
-Release: 1
+Release: 2
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
