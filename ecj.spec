@@ -3,16 +3,10 @@
 %define with_gcjbootstrap %{!?_with_gcjbootstrap:0}%{?_with_gcjbootstrap:1}
 %define without_gcjbootstrap %{?_with_gcjbootstrap:0}%{!?_with_gcjbootstrap:1}
 
-# FIXME until java stack is corrected
-%if 1
-%bcond_without	gcjbootstrap
-BuildConflicts:	java-1.5.0-gcj
-%endif
-
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 3.4.2
-Release: 2
+Release: 1
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
@@ -32,12 +26,8 @@ Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
 
 BuildRequires: gcc-java >= 4.0.0
-# FIXME correcting the mess by means of submit is tough
-# remove in next build (it actually builds with only gcc-java-4.6.1)
-%if 0
 BuildRequires: java-1.5.0-gcj-devel
 BuildRequires: java-gcj-compat
-%endif
 
 %if %{with_gcjbootstrap}
 Provides:	ecj-bootstrap
@@ -105,10 +95,7 @@ popd
 install -p -D -m0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ecj
 sed --in-place "s:@JAVADIR@:%{_javadir}:" $RPM_BUILD_ROOT%{_bindir}/ecj
 
-# FIXME until java stack is corrected
-%if 0
 aot-compile-rpm
-%endif
 
 # poms
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
