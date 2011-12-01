@@ -80,11 +80,11 @@ rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-mkdir -p $RPM_BUILD_ROOT%{_javadir}
-cp -a *.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-pushd $RPM_BUILD_ROOT%{_javadir}
+mkdir -p %{buildroot}%{_javadir}
+cp -a *.jar %{buildroot}%{_javadir}/%{name}-%{version}.jar
+pushd %{buildroot}%{_javadir}
 ln -s %{name}-%{version}.jar %{name}.jar
 ln -s %{name}-%{version}.jar eclipse-%{name}-%{version}.jar
 ln -s eclipse-%{name}-%{version}.jar eclipse-%{name}.jar
@@ -92,20 +92,20 @@ ln -s %{name}-%{version}.jar jdtcore.jar
 popd
 
 # Install the ecj wrapper script
-install -p -D -m0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ecj
-sed --in-place "s:@JAVADIR@:%{_javadir}:" $RPM_BUILD_ROOT%{_bindir}/ecj
+install -p -D -m0755 %{SOURCE1} %{buildroot}%{_bindir}/ecj
+sed --in-place "s:@JAVADIR@:%{_javadir}:" %{buildroot}%{_bindir}/ecj
 
 aot-compile-rpm
 
 # poms
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
 install -pm 644 pom.xml \
-    $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
+    %{buildroot}%{_datadir}/maven2/poms/JPP-%{name}.pom
 
 %add_to_maven_depmap org.eclipse.jdt core %{version} JPP %{name}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 if [ -x %{_bindir}/rebuild-gcj-db ]
