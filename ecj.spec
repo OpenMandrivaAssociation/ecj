@@ -6,11 +6,11 @@
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 3.4.2
-Release: 3
+Release: 5
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildArch: noarch
 
 Source0: http://download.eclipse.org/eclipse/downloads/drops/R-%{version}-%{qualifier}/%{name}src-%{version}.zip
 Source1: ecj.sh.in
@@ -26,18 +26,13 @@ Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
 
 BuildRequires: gcc-java >= 4.0.0
-BuildRequires: java-1.5.0-gcj-devel
-BuildRequires: java-gcj-compat
+BuildRequires: java-devel
 
 %if %{with_gcjbootstrap}
 Provides:	ecj-bootstrap
 %else
 BuildRequires: ant
 %endif
-
-Requires: libgcj >= 4.0.0
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
 
 Provides: eclipse-ecj = 1:%{version}-%{release}
 
@@ -95,8 +90,6 @@ popd
 install -p -D -m0755 %{SOURCE1} %{buildroot}%{_bindir}/ecj
 sed --in-place "s:@JAVADIR@:%{_javadir}:" %{buildroot}%{_bindir}/ecj
 
-aot-compile-rpm
-
 # poms
 install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
 install -pm 644 pom.xml \
@@ -108,17 +101,9 @@ install -pm 644 pom.xml \
 rm -rf %{buildroot}
 
 %post
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
 %update_maven_depmap
 
 %postun
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
 %update_maven_depmap
 
 %files
@@ -130,4 +115,3 @@ fi
 %{_javadir}/%{name}*.jar
 %{_javadir}/eclipse-%{name}*.jar
 %{_javadir}/jdtcore.jar
-%{_libdir}/gcj/%{name}
