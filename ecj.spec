@@ -6,11 +6,11 @@
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 3.4.2
-Release: 5
+Release: 2
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
-BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 Source0: http://download.eclipse.org/eclipse/downloads/drops/R-%{version}-%{qualifier}/%{name}src-%{version}.zip
 Source1: ecj.sh.in
@@ -26,13 +26,16 @@ Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
 
 BuildRequires: gcc-java >= 4.0.0
-BuildRequires: java-devel
+BuildRequires: java-1.5.0-gcj-devel
+BuildRequires: java-gcj-compat
 
-%if %{with_gcjbootstrap}
-Provides:	ecj-bootstrap
-%else
+%if ! %{with_gcjbootstrap}
 BuildRequires: ant
 %endif
+
+Requires: libgcj >= 4.0.0
+Requires(post): java-gcj-compat
+Requires(postun): java-gcj-compat
 
 Provides: eclipse-ecj = 1:%{version}-%{release}
 
@@ -75,11 +78,11 @@ rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
 %endif
 
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
-mkdir -p %{buildroot}%{_javadir}
-cp -a *.jar %{buildroot}%{_javadir}/%{name}-%{version}.jar
-pushd %{buildroot}%{_javadir}
+mkdir -p $RPM_BUILD_ROOT%{_javadir}
+cp -a *.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
+pushd $RPM_BUILD_ROOT%{_javadir}
 ln -s %{name}-%{version}.jar %{name}.jar
 ln -s %{name}-%{version}.jar eclipse-%{name}-%{version}.jar
 ln -s eclipse-%{name}-%{version}.jar eclipse-%{name}.jar
@@ -87,23 +90,33 @@ ln -s %{name}-%{version}.jar jdtcore.jar
 popd
 
 # Install the ecj wrapper script
-install -p -D -m0755 %{SOURCE1} %{buildroot}%{_bindir}/ecj
-sed --in-place "s:@JAVADIR@:%{_javadir}:" %{buildroot}%{_bindir}/ecj
+install -p -D -m0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ecj
+sed --in-place "s:@JAVADIR@:%{_javadir}:" $RPM_BUILD_ROOT%{_bindir}/ecj
+
+aot-compile-rpm
 
 # poms
-install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
 install -pm 644 pom.xml \
-    %{buildroot}%{_datadir}/maven2/poms/JPP-%{name}.pom
+    $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
 
 %add_to_maven_depmap org.eclipse.jdt core %{version} JPP %{name}
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %post
+if [ -x %{_bindir}/rebuild-gcj-db ]
+then
+  %{_bindir}/rebuild-gcj-db
+fi
 %update_maven_depmap
 
 %postun
+if [ -x %{_bindir}/rebuild-gcj-db ]
+then
+  %{_bindir}/rebuild-gcj-db
+fi
 %update_maven_depmap
 
 %files
@@ -115,3 +128,12 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}*.jar
 %{_javadir}/eclipse-%{name}*.jar
 %{_javadir}/jdtcore.jar
+%{_libdir}/gcj/%{name}
+
+
+%changelog
+* Sun May 22 2011 Paulo Andrade <pcpa@mandriva.com.br> 3.4.2-1
++ Revision: 676968
+- Import fedora ecj 3.4.2 package
+- Import ecj
+
