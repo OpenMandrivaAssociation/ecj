@@ -1,7 +1,8 @@
 %define qualifier 200902111700
 
-%define with_gcjbootstrap %{!?_with_gcjbootstrap:0}%{?_with_gcjbootstrap:1}
-%define without_gcjbootstrap %{?_with_gcjbootstrap:0}%{!?_with_gcjbootstrap:1}
+%define debug_package	%nil
+
+%bcond_with gcjbootstrap
 
 Summary: Eclipse Compiler for Java
 Name: ecj
@@ -10,8 +11,6 @@ Release: 2
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
 Source0: http://download.eclipse.org/eclipse/downloads/drops/R-%{version}-%{qualifier}/%{name}src-%{version}.zip
 Source1: ecj.sh.in
 # Use ECJ for GCJ
@@ -29,7 +28,7 @@ BuildRequires: gcc-java >= 4.0.0
 BuildRequires: java-1.5.0-gcj-devel
 BuildRequires: java-gcj-compat
 
-%if ! %{with_gcjbootstrap}
+%if ! %{with gcjbootstrap}
 BuildRequires: ant
 %endif
 
@@ -66,7 +65,7 @@ rm -r org/eclipse/jdt/internal/compiler/apt
 rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
 
 %build
-%if %{with_gcjbootstrap}
+%if %{with gcjbootstrap}
   for f in `find -name '*.java' | cut -c 3- | LC_ALL=C sort`; do
     gcj -Wno-deprecated -C $f
   done
@@ -78,11 +77,9 @@ rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT%{_javadir}
-cp -a *.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-pushd $RPM_BUILD_ROOT%{_javadir}
+mkdir -p %{buildroot}%{_javadir}
+cp -a *.jar %{buildroot}%{_javadir}/%{name}-%{version}.jar
+pushd %{buildroot}%{_javadir}
 ln -s %{name}-%{version}.jar %{name}.jar
 ln -s %{name}-%{version}.jar eclipse-%{name}-%{version}.jar
 ln -s eclipse-%{name}-%{version}.jar eclipse-%{name}.jar
@@ -90,37 +87,39 @@ ln -s %{name}-%{version}.jar jdtcore.jar
 popd
 
 # Install the ecj wrapper script
-install -p -D -m0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ecj
-sed --in-place "s:@JAVADIR@:%{_javadir}:" $RPM_BUILD_ROOT%{_bindir}/ecj
+install -p -D -m0755 %{SOURCE1} %{buildroot}%{_bindir}/ecj
+sed --in-place "s:@JAVADIR@:%{_javadir}:" %{buildroot}%{_bindir}/ecj
 
+%if %{with gcjbootstrap}
 aot-compile-rpm
+%endif
 
 # poms
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
 install -pm 644 pom.xml \
-    $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
+    %{buildroot}%{_datadir}/maven2/poms/JPP-%{name}.pom
 
 %add_to_maven_depmap org.eclipse.jdt core %{version} JPP %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post
+%if %{with gcjbootstrap}
 if [ -x %{_bindir}/rebuild-gcj-db ]
 then
   %{_bindir}/rebuild-gcj-db
 fi
+%endif
 %update_maven_depmap
 
+%if %{with gcjbootstrap}
 %postun
 if [ -x %{_bindir}/rebuild-gcj-db ]
 then
   %{_bindir}/rebuild-gcj-db
 fi
+%endif
 %update_maven_depmap
 
 %files
-%defattr(-,root,root,-)
 %doc about.html
 %{_datadir}/maven2/poms/JPP-%{name}.pom
 %{_mavendepmapfragdir}/%{name}
@@ -128,8 +127,9 @@ fi
 %{_javadir}/%{name}*.jar
 %{_javadir}/eclipse-%{name}*.jar
 %{_javadir}/jdtcore.jar
+%if %{with gcjbootstrap}
 %{_libdir}/gcj/%{name}
-
+%endif
 
 %changelog
 * Sun May 22 2011 Paulo Andrade <pcpa@mandriva.com.br> 3.4.2-1

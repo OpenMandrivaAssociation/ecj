@@ -1,3 +1,4 @@
 sources:
-  "ecj-gcj.tar.bz2": 4fedc5007c0c2f06ff41ef8a6fcc630d8c0953ca
-  "ecjsrc-3.4.2.zip": 6f52b6b636f923793ae0e327dd903ea97b8467cf
+  core-3.3.0-v_771.pom: 26d863c36a6dd563512d4d6f717bb9ef55a9f296
+  ecj-gcj.tar.bz2: 4fedc5007c0c2f06ff41ef8a6fcc630d8c0953ca
+  ecjsrc-3.4.2.zip: 6f52b6b636f923793ae0e327dd903ea97b8467cf
