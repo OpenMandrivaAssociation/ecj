@@ -7,7 +7,7 @@
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 3.4.2
-Release: 2
+Release: 3
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
@@ -26,15 +26,14 @@ Patch2: %{name}-generatedebuginfo.patch
 
 BuildRequires: gcc-java >= 4.0.0
 BuildRequires: java-1.5.0-gcj-devel
-BuildRequires: java-gcj-compat
 
 %if ! %{with gcjbootstrap}
 BuildRequires: ant
 %endif
 
 Requires: libgcj >= 4.0.0
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
+Requires(post): gcc-java
+Requires(postun): gcc-java
 
 Provides: eclipse-ecj = 1:%{version}-%{release}
 
