@@ -6,12 +6,12 @@
 
 Summary: Eclipse Compiler for Java
 Name: ecj
-Version: 3.4.2
-Release: 3
+Version: 4.2.1
+Release: 1
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Java
-Source0: http://download.eclipse.org/eclipse/downloads/drops/R-%{version}-%{qualifier}/%{name}src-%{version}.zip
+Source0: http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.1-201209141800/ecjsrc-%{version}.jar
 Source1: ecj.sh.in
 # Use ECJ for GCJ
 # cvs -d:pserver:anonymous@sourceware.org:/cvs/rhug \
@@ -23,6 +23,7 @@ Source3: http://repo2.maven.org/maven2/org/eclipse/jdt/core/3.3.0-v_771/core-3.3
 Patch0: %{name}-rpmdebuginfo.patch
 Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
+Patch3: ecj-4.2.1-compile.patch
 
 BuildRequires: gcc-java >= 4.0.0
 BuildRequires: java-1.5.0-gcj-devel
@@ -35,6 +36,7 @@ Requires: libgcj >= 4.0.0
 Requires(post): gcc-java
 Requires(postun): gcc-java
 
+Obsoletes: eclipse-ecj < 1:%{version}-%{release}
 Provides: eclipse-ecj = 1:%{version}-%{release}
 
 %description
@@ -43,11 +45,6 @@ the JDT Core batch compiler.
 
 %prep
 %setup -q -c
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-
-cp %{SOURCE3} pom.xml
 # Use ECJ for GCJ's bytecode compiler
 tar jxf %{SOURCE2}
 mv eclipse-gcj/org/eclipse/jdt/internal/compiler/batch/GCCMain.java \
@@ -55,6 +52,10 @@ mv eclipse-gcj/org/eclipse/jdt/internal/compiler/batch/GCCMain.java \
 cat eclipse-gcj/gcc.properties >> \
   org/eclipse/jdt/internal/compiler/batch/messages.properties
 rm -rf eclipse-gcj
+
+%apply_patches
+
+cp %{SOURCE3} pom.xml
 
 # Remove bits of JDT Core we don't want to build
 rm -r org/eclipse/jdt/internal/compiler/tool
