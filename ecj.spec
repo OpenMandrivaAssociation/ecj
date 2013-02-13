@@ -25,17 +25,16 @@ Patch1: %{name}-defaultto1.5.patch
 Patch2: %{name}-generatedebuginfo.patch
 Patch3: ecj-4.2.1-compile.patch
 
-BuildRequires: gcc-java >= 4.0.0
-BuildRequires: java-1.5.0-gcj-devel
-
-%if ! %{with gcjbootstrap}
+%if %{without gcjbootstrap}
 BuildRequires: ant
+BuildRequires: java-1.6.0-openjdk-devel
+%else
+BuildRequires: gcc-java >= 4.0.0
 %endif
 
-Requires: libgcj >= 4.0.0
-Requires(post): gcc-java
-Requires(postun): gcc-java
+BuildArch: noarch
 
+Requires: java-sdk
 Obsoletes: eclipse-ecj < 1:%{version}-%{release}
 Provides: eclipse-ecj = 1:%{version}-%{release}
 
@@ -73,6 +72,7 @@ rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
   find -name '*.class' -or -name '*.properties' -or -name '*.rsc' |\
     xargs fastjar cf %{name}-%{version}.jar
 %else
+   export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0
    ant
 %endif
 
@@ -90,10 +90,6 @@ popd
 install -p -D -m0755 %{SOURCE1} %{buildroot}%{_bindir}/ecj
 sed --in-place "s:@JAVADIR@:%{_javadir}:" %{buildroot}%{_bindir}/ecj
 
-%if %{with gcjbootstrap}
-aot-compile-rpm
-%endif
-
 # poms
 install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
 install -pm 644 pom.xml \
@@ -102,21 +98,9 @@ install -pm 644 pom.xml \
 %add_to_maven_depmap org.eclipse.jdt core %{version} JPP %{name}
 
 %post
-%if %{with gcjbootstrap}
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 %update_maven_depmap
 
-%if %{with gcjbootstrap}
 %postun
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 %update_maven_depmap
 
 %files
@@ -127,9 +111,6 @@ fi
 %{_javadir}/%{name}*.jar
 %{_javadir}/eclipse-%{name}*.jar
 %{_javadir}/jdtcore.jar
-%if %{with gcjbootstrap}
-%{_libdir}/gcj/%{name}
-%endif
 
 %changelog
 * Sun May 22 2011 Paulo Andrade <pcpa@mandriva.com.br> 3.4.2-1
