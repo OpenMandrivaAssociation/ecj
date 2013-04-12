@@ -1,42 +1,39 @@
-%define qualifier 200902111700
-
 %define debug_package	%nil
-
+%define qualifier 200902111700
 %bcond_with gcjbootstrap
 
-Summary: Eclipse Compiler for Java
-Name: ecj
-Version: 4.2.1
-Release: 1
-URL: http://www.eclipse.org
-License: EPL
-Group: Development/Java
-Source0: http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.1-201209141800/ecjsrc-%{version}.jar
-Source1: ecj.sh.in
+Summary:	Eclipse Compiler for Java
+Name:		ecj
+Version:	4.2.1
+Release:	1
+Url:		http://www.eclipse.org
+License:	EPL
+Group:		Development/Java
+Source0:	http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.1-201209141800/ecjsrc-%{version}.jar
+Source1:	ecj.sh.in
 # Use ECJ for GCJ
 # cvs -d:pserver:anonymous@sourceware.org:/cvs/rhug \
 # export -r eclipse_r34_1 eclipse-gcj
 # tar cjf ecj-gcj.tar.bz2 eclipse-gcj
-Source2: %{name}-gcj.tar.bz2
-Source3: http://repo2.maven.org/maven2/org/eclipse/jdt/core/3.3.0-v_771/core-3.3.0-v_771.pom
+Source2:	%{name}-gcj.tar.bz2
+Source3:	http://repo2.maven.org/maven2/org/eclipse/jdt/core/3.3.0-v_771/core-3.3.0-v_771.pom
 # Always generate debug info when building RPMs (Andrew Haley)
-Patch0: %{name}-rpmdebuginfo.patch
-Patch1: %{name}-defaultto1.5.patch
-Patch2: %{name}-generatedebuginfo.patch
-Patch3: ecj-4.2.1-compile.patch
+Patch0:		%{name}-rpmdebuginfo.patch
+Patch1:		%{name}-defaultto1.5.patch
+Patch2:		%{name}-generatedebuginfo.patch
+Patch3:		ecj-4.2.1-compile.patch
+BuildArch:	noarch
 
 %if %{without gcjbootstrap}
-BuildRequires: ant
-BuildRequires: java-1.6.0-openjdk-devel
+BuildRequires:	ant
+BuildRequires:	java-1.6.0-openjdk-devel
 %else
-BuildRequires: gcc-java >= 4.0.0
+BuildRequires:	gcc-java >= 4.0.0
 %endif
 
-BuildArch: noarch
-
-Requires: java-sdk
-Obsoletes: eclipse-ecj < 1:%{version}-%{release}
-Provides: eclipse-ecj = 1:%{version}-%{release}
+Requires:	java-sdk
+Obsoletes:	eclipse-ecj < 1:%{version}-%{release}
+Provides:	eclipse-ecj = 1:%{version}-%{release}
 
 %description
 ECJ is the Java bytecode compiler of the Eclipse Platform.  It is also known as
@@ -111,10 +108,4 @@ install -pm 644 pom.xml \
 %{_javadir}/%{name}*.jar
 %{_javadir}/eclipse-%{name}*.jar
 %{_javadir}/jdtcore.jar
-
-%changelog
-* Sun May 22 2011 Paulo Andrade <pcpa@mandriva.com.br> 3.4.2-1
-+ Revision: 676968
-- Import fedora ecj 3.4.2 package
-- Import ecj
 
