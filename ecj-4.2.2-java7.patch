@@ -1,0 +1,12 @@
+--- ecj-4.2.2/org/eclipse/jdt/internal/compiler/parser/Parser.java.bero	2013-05-10 14:12:57.287340742 +0200
++++ ecj-4.2.2/org/eclipse/jdt/internal/compiler/parser/Parser.java	2013-05-10 14:13:24.054006112 +0200
+@@ -713,6 +713,9 @@ public class Parser implements  ParserBa
+ 		} catch (IOException e) {
+ 			result = name;
+ 			return result;
++		} catch (NullPointerException e) {
++			result = name;
++			return result;
+ 		}
+ 		for (int i = 0; i < NT_OFFSET + 1; i++) {
+ 			result[i] = name[i];

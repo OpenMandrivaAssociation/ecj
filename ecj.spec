@@ -4,7 +4,9 @@
 
 Summary:	Eclipse Compiler for Java
 Name:		ecj
-Version:	4.2.1
+Version:	4.2.2
+# Sad, but eclipse-ecj Obsoletes: ecj < 2:3.4.2-0.2.7
+Epoch:		2
 Release:	1
 Url:		http://www.eclipse.org
 License:	EPL
@@ -22,11 +24,12 @@ Patch0:		%{name}-rpmdebuginfo.patch
 Patch1:		%{name}-defaultto1.5.patch
 Patch2:		%{name}-generatedebuginfo.patch
 Patch3:		ecj-4.2.1-compile.patch
+Patch4:		ecj-4.2.2-java7.patch
 BuildArch:	noarch
 
 %if %{without gcjbootstrap}
 BuildRequires:	ant
-BuildRequires:	java-1.6.0-openjdk-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 %else
 BuildRequires:	gcc-java >= 4.0.0
 %endif
@@ -53,12 +56,17 @@ rm -rf eclipse-gcj
 
 cp %{SOURCE3} pom.xml
 
+# We could remove the parts below as they aren't required for ecj core
+# functionality -- but e.g. forcing ant to use ecj over javac requires
+# the JDTCompilerAdapter, so let's not save space at the cost of losing
+# functionality...
+
 # Remove bits of JDT Core we don't want to build
-rm -r org/eclipse/jdt/internal/compiler/tool
-rm -r org/eclipse/jdt/internal/compiler/apt
+#rm -r org/eclipse/jdt/internal/compiler/tool
+#rm -r org/eclipse/jdt/internal/compiler/apt
 
 # JDTCompilerAdapter isn't used by the batch compiler
-rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
+#rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
 
 %build
 %if %{with gcjbootstrap}
@@ -69,7 +77,6 @@ rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
   find -name '*.class' -or -name '*.properties' -or -name '*.rsc' |\
     xargs fastjar cf %{name}-%{version}.jar
 %else
-   export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0
    ant
 %endif
 
