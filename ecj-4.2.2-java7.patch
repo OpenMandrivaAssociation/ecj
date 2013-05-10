@@ -10,3 +10,21 @@
  		}
  		for (int i = 0; i < NT_OFFSET + 1; i++) {
  			result[i] = name[i];
+--- ecj-4.2.2/org/eclipse/jdt/internal/compiler/ReadManager.java.bero	2013-05-10 19:41:53.826600047 +0200
++++ ecj-4.2.2/org/eclipse/jdt/internal/compiler/ReadManager.java	2013-05-10 19:51:24.391467004 +0200
+@@ -170,6 +170,8 @@ public void run() {
+ 				this.filesRead[position] = unit;
+ 				this.contentsRead[position] = this.readInProcessMarker; // mark the spot so we know its being read
+ 			}
++			if(unit == null)
++				return;
+ 			char[] result = unit.getContents();
+ 			synchronized (this) {
+ 				if (this.filesRead[position] == unit) {
+@@ -198,4 +200,4 @@ public synchronized void shutdown() {
+ 	this.readingThreads = null; // mark the read manager as shutting down so that the reading threads stop
+ 	notifyAll();
+ }
+-}
+\ No newline at end of file
++}
