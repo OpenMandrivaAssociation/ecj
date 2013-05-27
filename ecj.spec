@@ -7,11 +7,11 @@ Name:		ecj
 Version:	4.2.2
 # Sad, but eclipse-ecj Obsoletes: ecj < 2:3.4.2-0.2.7
 Epoch:		2
-Release:	2
+Release:	3
 Url:		http://www.eclipse.org
 License:	EPL
 Group:		Development/Java
-Source0:	http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.1-201209141800/ecjsrc-%{version}.jar
+Source0:	http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.2-201302041200/ecjsrc-%{version}.jar
 Source1:	ecj.sh.in
 # Use ECJ for GCJ
 # cvs -d:pserver:anonymous@sourceware.org:/cvs/rhug \
