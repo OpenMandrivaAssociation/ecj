@@ -4,14 +4,14 @@
 
 Summary:	Eclipse Compiler for Java
 Name:		ecj
-Version:	4.2.2
+Version:	4.3
 # Sad, but eclipse-ecj Obsoletes: ecj < 2:3.4.2-0.2.7
 Epoch:		2
-Release:	3
+Release:	1
 Url:		http://www.eclipse.org
 License:	EPL
 Group:		Development/Java
-Source0:	http://ftp.halifax.rwth-aachen.de/eclipse//eclipse/downloads/drops4/R-4.2.2-201302041200/ecjsrc-%{version}.jar
+Source0:	ftp://ftp.halifax.rwth-aachen.de/eclipse/eclipse/downloads/drops4/R-4.3-201306052000/ecjsrc-%{version}.jar
 Source1:	ecj.sh.in
 # Use ECJ for GCJ
 # cvs -d:pserver:anonymous@sourceware.org:/cvs/rhug \
@@ -25,6 +25,7 @@ Patch1:		%{name}-defaultto1.5.patch
 Patch2:		%{name}-generatedebuginfo.patch
 Patch3:		ecj-4.2.1-compile.patch
 Patch4:		ecj-4.2.2-java7.patch
+Patch5:		ecj-4.3-compile.patch
 BuildArch:	noarch
 
 %if %{without gcjbootstrap}

@@ -1,5 +1,5 @@
 sources:
   core-3.3.0-v_771.pom: 26d863c36a6dd563512d4d6f717bb9ef55a9f296
   ecj-gcj.tar.bz2: 4fedc5007c0c2f06ff41ef8a6fcc630d8c0953ca
-  ecjsrc-4.2.1.jar: cbbac0b172bf383e633269c1967e1ef2b32e7051
   ecjsrc-4.2.2.jar: fb9dc21349d06dd00b395af5c42f299df828f9da
+  ecjsrc-4.3.jar: 20d811a8429557b4ae71c3cb6d4ef49a83f2ce4b
