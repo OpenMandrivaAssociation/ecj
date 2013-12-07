@@ -7,7 +7,7 @@ Name:		ecj
 Version:	4.3
 # Sad, but eclipse-ecj Obsoletes: ecj < 2:3.4.2-0.2.7
 Epoch:		2
-Release:	3
+Release:	4
 Url:		http://www.eclipse.org
 License:	EPL
 Group:		Development/Java
