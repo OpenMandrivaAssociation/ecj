@@ -1,6 +1,13 @@
---- ecj-4.2.1/org/eclipse/jdt/internal/compiler/batch/Main.java.orig	2012-09-14 18:22:44.000000000 +0200
-+++ ecj-4.2.1/org/eclipse/jdt/internal/compiler/batch/Main.java	2013-02-13 00:03:00.262940565 +0100
-@@ -2743,6 +2743,29 @@ public void configure(String[] argv) {
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.jdt.core
+Index: batch/org/eclipse/jdt/internal/compiler/batch/Main.java
+===================================================================
+RCS file: /cvsroot/eclipse/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java,v
+retrieving revision 1.327
+diff -u -r1.327 Main.java
+--- batch/org/eclipse/jdt/internal/compiler/batch/Main.java	21 Apr 2008 15:00:59 -0000	1.327
++++ batch/org/eclipse/jdt/internal/compiler/batch/Main.java	20 Nov 2008 19:26:57 -0000
+@@ -2609,6 +2609,29 @@
  		this.options.put(CompilerOptions.OPTION_Process_Annotations, CompilerOptions.ENABLED);
  	}
  
