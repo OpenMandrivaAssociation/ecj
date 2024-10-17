@@ -7,7 +7,7 @@ Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 4.4.0
 Release: 1%{?dist}
-URL: http://www.eclipse.org
+URL: https://www.eclipse.org
 License: EPL
 Group: Development/Java
 Source0: http://download.eclipse.org/eclipse/downloads/drops4/%{qualifier}/%{name}src-4.4.jar
